@@ -4,7 +4,6 @@ const bcrypt = require("bcryptjs");
 const { generateToken } = require("../utils/index");
 var parser = require("ua-parser-js");
 
-
 // Register User
 const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
@@ -136,11 +135,29 @@ const logoutUser = asyncHandler(async (req, res) => {
     sameSite: "none",
     secure: true,
   });
-  return res.status(200).json({ message: "Logout successful"})
-})
+  return res.status(200).json({ message: "Logout successful" });
+});
 
 const getUser = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
 
-})
+  if (user) {
+    const { _id, name, email, phone, bio, photo, role, isVerified } = user;
+
+    res.status(200).json({
+      _id,
+      name,
+      email,
+      phone,
+      bio,
+      photo,
+      role,
+      isVerified,
+    });
+  } else {
+    res.status(404);
+    throw new Error("User not fount");
+  }
+});
 
 module.exports = { registerUser, loginUser, logoutUser, getUser };
