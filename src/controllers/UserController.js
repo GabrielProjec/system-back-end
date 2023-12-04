@@ -168,13 +168,13 @@ const updateUser = asyncHandler(async (req, res) => {
   if (user) {
     const { name, email, phone, bio, photo, role, isVerified } = user;
 
-    user.email = email
-    user.name = req.body.name || name
-    user.phone = req.body.phone || phone
-    user.bio = req.body.bio || bio
-    user.photo = req.body.photo || photo
+    user.email = email;
+    user.name = req.body.name || name;
+    user.phone = req.body.phone || phone;
+    user.bio = req.body.bio || bio;
+    user.photo = req.body.photo || photo;
 
-    const updatedUser = await user.save()
+    const updatedUser = await user.save();
 
     res.status(200).json({
       _id: updatedUser._id,
@@ -186,11 +186,22 @@ const updateUser = asyncHandler(async (req, res) => {
       role: updatedUser.role,
       isVerified: updatedUser.isVerified,
     });
-
   } else {
     res.status(404);
     throw new Error("User not found");
   }
 });
 
-module.exports = { registerUser, loginUser, logoutUser, getUser, updateUser };
+//delete User
+const deleteUser = asyncHandler(async (req, res) => {
+  
+});
+
+module.exports = {
+  registerUser,
+  loginUser,
+  logoutUser,
+  getUser,
+  updateUser,
+  deleteUser,
+};

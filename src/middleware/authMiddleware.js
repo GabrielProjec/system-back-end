@@ -33,4 +33,31 @@ const protect = asyncHandler(async (req, res, next) => {
   }
 });
 
-module.exports = {protect}
+const adminOlny = async (req, res, next) => {
+  if (req.user && req.user.role === "admin") {
+    next();
+  } else {
+    res.status(401);
+    throw new Error("Not authorize as an admin");
+  }
+};
+
+const authorOlny = async (req, res) => {
+  if (req.user.role === "author" || req.user.role === "admin") {
+    next();
+  } else {
+    res.status(401);
+    throw new Error("Not authorize as an author");
+  }
+};
+
+const verifiedOlny = async (req, res) => {
+  if (req.user && req.user.isVerified) {
+    next();
+  } else {
+    res.status(401);
+    throw new Error("Not authorize, account not verified");
+  }
+};
+
+module.exports = { protect, adminOlny, authorOlny, verifiedOlny };
