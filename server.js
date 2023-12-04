@@ -4,7 +4,10 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
+
+// IMPORTS
 const userRoutes = require("./src/routes/UserRouter");
+const errorHandler = require("./src/middleware/erroMiddleware");
 
 const app = express();
 
@@ -27,6 +30,9 @@ app.use("/api/users", userRoutes);
 app.get("/", (req, res) => {
   res.send("Hello Word");
 });
+
+// Error Handler
+app.use(errorHandler);
 
 const PORT = 5000;
 
