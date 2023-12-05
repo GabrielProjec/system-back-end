@@ -4,6 +4,7 @@ const bcrypt = require("bcryptjs");
 const { generateToken } = require("../utils/index");
 var parser = require("ua-parser-js");
 const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
 
 // Register User
 const registerUser = asyncHandler(async (req, res) => {
@@ -283,11 +284,34 @@ const sendAutomatedEmail = asyncHandler(async (req, res) => {
       name,
       link
     );
-    res.status(200).json({message: "Email Sent"})
+    res.status(200).json({ message: "Email Sent" });
   } catch (error) {
     res.status(500);
     throw new Error("Email not sent, please try again");
   }
+});
+
+// Send Verification Email
+const sendVerificationEmail = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
+
+  if (!user) {
+    res.status(404);
+    throw new Error("User not found");
+  }
+  if (user.isVerified) {
+    res.status(400);
+    throw new Error("User already verified");
+  }
+
+  // Delete Token if it exists in DB
+  let token = await TokenExpiredError.findOne({ userId: user._id });
+  if (token) {
+    await token.deleteOne();
+  }
+
+  // Create Verification token and Save
+  const verificationToken = crypto.randomBytes(32).toString("hex") + user._id;
 });
 
 module.exports = {
@@ -301,4 +325,5 @@ module.exports = {
   upgradeUser,
   deleteUser,
   sendAutomatedEmail,
+  sendVerificationEmail,
 };
