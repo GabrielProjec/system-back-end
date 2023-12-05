@@ -8,6 +8,7 @@ const {
   getUsers,
   updateUser,
   deleteUser,
+  loginStatus,
 } = require("../controllers/UserController");
 const {
   protect,
