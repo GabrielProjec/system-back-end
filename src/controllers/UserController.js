@@ -161,6 +161,16 @@ const getUser = asyncHandler(async (req, res) => {
   }
 });
 
+//get Users
+const getUsers = asyncHandler(async (req, res) => {
+  const users = await User.find().sort("-createdAt").select("-password");
+  if (!users) {
+    res.status(500);
+    throw new Error("Something went wrong");
+  }
+  res.status(200).json(users);
+});
+
 // Update User
 const updateUser = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id);
@@ -212,6 +222,7 @@ module.exports = {
   loginUser,
   logoutUser,
   getUser,
+  getUsers,
   updateUser,
   deleteUser,
 };
