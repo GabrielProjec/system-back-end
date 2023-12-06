@@ -1,7 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const User = require("../models/userModel");
 const bcrypt = require("bcryptjs");
-const { generateToken } = require("../utils/index");
+const { generateToken, hashToken } = require("../utils/index");
 var parser = require("ua-parser-js");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
@@ -312,6 +312,43 @@ const sendVerificationEmail = asyncHandler(async (req, res) => {
 
   // Create Verification token and Save
   const verificationToken = crypto.randomBytes(32).toString("hex") + user._id;
+
+  // Hash token and save
+  const hashedToken = hashToken(verificationToken);
+  await new Token({
+    userId: user._id,
+    vToken: hashToken,
+    createdAt: Date.now(),
+    expiresdAt: Date.now() + 60 * (60 * 1000), // 60 mins
+  }).save();
+
+  // Contruct Verification URL
+  const verificationUrl = `${process.env.FRONTEND_URL}/verify/${verificationToken}`;
+
+  // Send Email
+  const subject = "Verify Your Account - AUTH: Z";
+  const send_to = user.email;
+  const sent_from = process.env.EMAIL_USER;
+  const reply_to = "noreply@zino.com";
+  const template = "verifyEmail";
+  const name = user.name;
+  const link = verificationUrl;
+
+  try {
+    await sendEmail(
+      subject,
+      send_to,
+      sent_from,
+      reply_to,
+      template,
+      name,
+      link
+    );
+    res.status(200).json({ message: "Email Sent" });
+  } catch (error) {
+    res.status(500);
+    throw new Error("Email not sent, please try again");
+  }
 });
 
 module.exports = {
