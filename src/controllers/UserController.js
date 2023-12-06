@@ -383,6 +383,9 @@ const verifyUser = asyncHandler(async (req, res) => {
   res.status(200).json({ message: "Account Verification Successful" });
 });
 
+// Forgot Password
+const forgotPassword = asyncHandler(async (req, res) => {})
+
 module.exports = {
   registerUser,
   loginUser,
@@ -396,4 +399,5 @@ module.exports = {
   deleteUser,
   sendAutomatedEmail,
   sendVerificationEmail,
+  forgotPassword
 };

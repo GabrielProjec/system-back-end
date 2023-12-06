@@ -11,6 +11,7 @@ const {
   loginStatus,
   upgradeUser,
   verifyUser,
+  forgotPassword,
   sendAutomatedEmail,
   sendVerificationEmail
 } = require("../controllers/UserController");
@@ -29,7 +30,8 @@ router.delete("/:id", protect, adminOlny, deleteUser);
 router.get("/getUsers", protect, authorOlny, getUsers);
 router.get("/loginStatus", loginStatus);
 router.post("/upgradeUser", protect, adminOlny, upgradeUser);
-router.patch("/verifyUser/:verificationToken", protect, verifyUser)
+router.patch("/verifyUser/:verificationToken", verifyUser)
+router.post("/forgotPassword", forgotPassword)
 
 //routes email
 router.post("/sendAutomatedEmail", protect, sendAutomatedEmail)
