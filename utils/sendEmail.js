@@ -27,20 +27,20 @@ const sendEmail = async (
   const handlearOptions = {
     viewEngine: {
       extName: ".handlebars",
-      partialsDir: path.resolve("/views"),
+      partialsDir: path.resolve("./views"),
       defaultLayout: false,
     },
-    viewPath: path.resolve("/views"),
+    viewPath: path.resolve("./views"),
     extName: ".handlebars",
   };
 
-  transporter.use("compile", hbs(handlearOptions))
+  transporter.use("compile", hbs(handlearOptions));
 
-  // options for sending email
+  // Options f0r sending email
   const options = {
     from: sent_from,
     to: send_to,
-    reply_to: reply_to,
+    replyTo: reply_to,
     subject,
     template,
     context: {
